@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Stats</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+            width: 100vw;
+            max-width: 100vw;
+        }
+
+        /* Desktop Warning */
+        .desktop-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .desktop-warning h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .desktop-warning p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
+        /* Image Placeholder Section */
+        .image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+
+        .image-background {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: #ff6b6b;
+            border-radius: 20px;
+            top: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+        .image-shadow {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: #d0d0d0;
+            border-radius: 15px;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .image-placeholder {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: #d0d0d0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-text {
+            color: #000;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Text Section */
+        .text-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .text-line1 {
+            font-size: 24px;
+            color: #ff6b6b;
+            font-style: italic;
+            font-weight: 400;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .text-line2 {
+            font-size: 14px;
+            color: #b0b0b0;
+            margin-bottom: 8px;
+        }
+
+        .text-line3 {
+            font-size: 32px;
+            color: #ff6b6b;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            margin-bottom: 20px;
+        }
+
+        .stat-item.anger-bar {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #000;
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            color: #000;
+            font-weight: 500;
+        }
+
+        .stat-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            display:flex;
+            align-items: center;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        .stat-bar-fill {
+            height: 16px;
+            background: #ff6b6b;
+            border-radius: 8px;
+            transition: width 1.5s ease-in-out;
+            width: 0%;
+        }
+
+        .stat-bar-fill.overflow {
+            width: 0%;
+            position: relative;
+            border-radius: 8px;
+        }
+
+        /* Separator */
+        .separator {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 40px 20px;
+        }
+
+        /* Cards Section */
+        .cards-section {
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+
+        .section-headline {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80') center/cover no-repeat;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .feature-card-content {
+            padding: 20px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 200px;
+        }
+
+        .feature-card-description {
+            font-size: 16px;
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .feature-card-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .feature-tag {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feature-card-button {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: #2a2a2a;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .feature-card-button:active {
+            transform: scale(0.98);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Mobile only - hide on desktop */
+        @media (min-width: 768px) {
+            .container {
+                display: none;
+            }
+
+            .desktop-warning {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .desktop-warning {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Warning -->
+    <div class="desktop-warning">
+        <div>
+            <h1>Please open in mobile to view this page</h1>
+            <p>This page is optimized for mobile devices only.</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Image Placeholder Section -->
+        <div class="image-section">
+            <div class="image-wrapper">
+                <div class="image-background"></div>
+                <div class="image-shadow"></div>
+                <div class="image-placeholder">
+                    <span class="image-text">IMAGE HERE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Section -->
+        <div class="text-section">
+            <div class="text-line1">ABCDEFGHI</div>
+            <div class="text-line2">AKA</div>
+            <div class="text-line3">ABCDE</div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-item intelligence-bar">
+                <div class="stat-header">
+                    <span class="stat-label">intelligence</span>
+                    <span class="stat-value" data-target="100">0 %</span>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill" data-target="100"></div>
+                </div>
+            </div>
+
+            <div class="stat-item creativity-bar">
+                <div class="stat-header">
+                    <span class="stat-label">creativity</span>
+                    <span class="stat-value" data-target="100">0 %</span>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill" data-target="100"></div>
+                </div>
+            </div>
+
+            <div class="stat-item beauty-bar">
+                <div class="stat-header">
+                    <span class="stat-label">beauty</span>
+                    <span class="stat-value" data-target="100">0 %</span>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill" data-target="100"></div>
+                </div>
+            </div>
+
+            <div class="stat-item patience-bar">
+                <div class="stat-header">
+                    <span class="stat-label">patience</span>
+                    <span class="stat-value" data-target="30">0 %</span>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill" data-target="30"></div>
+                </div>
+            </div>
+
+            <div class="stat-item anger-bar">
+                <div class="stat-header">
+                    <span class="stat-label">anger</span>
+                    <span class="stat-value">∞</span>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill overflow" data-target="100"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Cards Section -->
+        <div class="cards-section">
+            <h2 class="section-headline">Interests</h2>
+            
+            <!-- Featured Card -->
+            <div class="feature-card">
+                <div class="feature-card-content">
+                    <div class="feature-card-title">Swiss Chalet</div>
+                    <div class="feature-card-description">
+                        Cozy wooden chalet nestled in the Swiss Alps, offering a warm fireplace, scenic mountain views, and direct access to ski slopes.
+                    </div>
+                    <div class="feature-card-tags">
+                        <div class="feature-tag">♥ Same Pinch</div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+        // Function to animate number from 0 to target
+        function animateNumber(element, target, duration) {
+            const startValue = 0;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const currentValue = Math.floor(startValue + (target - startValue) * easeOut);
+                
+                element.textContent = currentValue + ' %';
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target + ' %';
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Animate progress bars on page load
+        window.addEventListener('load', function() {
+            const bars = document.querySelectorAll('.stat-bar-fill');
+            
+            bars.forEach(bar => {
+                const targetValue = parseInt(bar.getAttribute('data-target'));
+                const statItem = bar.closest('.stat-item');
+                
+                // Skip anger bar for number animation
+                if (!bar.classList.contains('overflow')) {
+                    const statValue = statItem.querySelector('.stat-value');
+                    if (statValue) {
+                        const valueTarget = parseInt(statValue.getAttribute('data-target'));
+                        animateNumber(statValue, valueTarget, 1500);
+                    }
+                }
+                
+                // Use requestAnimationFrame to ensure smooth animation
+                requestAnimationFrame(() => {
+                    // For anger bar, calculate width to reach right edge
+                    if (bar.classList.contains('overflow')) {
+                        const container = bar.closest('.stat-bar-container');
+                        const containerRect = container.getBoundingClientRect();
+                        const pageWidth = window.innerWidth;
+                        const distanceToRightEdge = pageWidth - containerRect.left;
+                        bar.style.width = distanceToRightEdge + 'px';
+                    } else {
+                        bar.style.width = targetValue + '%';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

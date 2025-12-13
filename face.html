@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revive Heart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Desktop Warning */
+        .desktop-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .desktop-warning h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .desktop-warning p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            padding: 12px;
+        }
+
+        /* Sky Section */
+        .sky-section {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .sky-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        /* Heart Section */
+        .heart-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: white;
+        }
+
+        .heart {
+            margin-top: 20px;
+            width: 150px;
+            height: 140px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 10;
+            --heart-color: #808080;
+        }
+
+        .heart:active {
+            transform: scale(0.95);
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 75px;
+            height: 120px;
+            position: absolute;
+            left: 75px;
+            top: 0;
+            background: var(--heart-color);
+            border-radius: 75px 75px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            transition: background 0.3s ease;
+        }
+
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .heart-text {
+            text-align: center;
+            color: #b0b0b0;
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+
+        .heart-text p {
+            margin: 5px 0;
+        }
+
+        /* Landscape Section */
+        .landscape-section {
+            flex: 1;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .landscape-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: bottom;
+        }
+
+        /* Heart Animation */
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes continuousBeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.15);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.08);
+            }
+        }
+
+        .heart.revived {
+            animation: heartbeat 0.6s ease-in-out;
+        }
+
+        .heart.continuous-beat {
+            animation: continuousBeat 0.8s ease-in-out infinite;
+        }
+
+        .countdown {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            z-index: 20;
+            display: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .countdown.show {
+            display: block;
+        }
+
+        /* Mobile only - hide on desktop */
+        @media (min-width: 768px) {
+            .container {
+                display: none;
+            }
+
+            .desktop-warning {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .desktop-warning {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Warning -->
+    <div class="desktop-warning">
+        <div>
+            <h1>Please open in mobile to view this page</h1>
+            <p>This page is optimized for mobile devices only.</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sky Section -->
+        <div class="sky-section">
+            <img src="assets/sky.png" alt="Sky" class="sky-img">
+        </div>
+
+        <!-- Heart Section -->
+        <div class="heart-section">
+            <div class="heart" id="heart">
+                <div class="countdown" id="countdown"></div>
+            </div>
+            <div class="heart-text">
+                <p>Tap on Heart</p>
+                <p>Revive it</p>
+            </div>
+        </div>
+
+        <!-- Landscape Section -->
+        <div class="landscape-section">
+            <img src="assets/undraw_quiet-street_v45k_1.png" alt="Quiet Street" class="landscape-img">
+        </div>
+    </div>
+
+    <script>
+        const heart = document.getElementById('heart');
+        const countdown = document.getElementById('countdown');
+        let tapCount = 0;
+        const maxTaps = 5;
+        const greyColor = '#808080';
+        const coralColor = '#ff6b6b';
+        let countdownStarted = false;
+
+        // Function to interpolate color between grey and coral
+        function interpolateColor(color1, color2, factor) {
+            // Convert hex to RGB
+            const hex1 = color1.replace('#', '');
+            const hex2 = color2.replace('#', '');
+            
+            const r1 = parseInt(hex1.substr(0, 2), 16);
+            const g1 = parseInt(hex1.substr(2, 2), 16);
+            const b1 = parseInt(hex1.substr(4, 2), 16);
+            
+            const r2 = parseInt(hex2.substr(0, 2), 16);
+            const g2 = parseInt(hex2.substr(2, 2), 16);
+            const b2 = parseInt(hex2.substr(4, 2), 16);
+            
+            const r = Math.round(r1 + (r2 - r1) * factor);
+            const g = Math.round(g1 + (g2 - g1) * factor);
+            const b = Math.round(b1 + (b2 - b1) * factor);
+            
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        // Function to start countdown
+        function startCountdown() {
+            if (countdownStarted) return;
+            countdownStarted = true;
+
+            // Wait 2 seconds after continuous beating starts
+            setTimeout(() => {
+                let count = 5;
+                countdown.classList.add('show');
+                countdown.textContent = count;
+
+                const countdownInterval = setInterval(() => {
+                    count--;
+                    if (count >= 1) {
+                        countdown.textContent = count;
+                    } else {
+                        // Show 1 for 1 second, then redirect
+                        countdown.textContent = '1';
+                        setTimeout(() => {
+                            window.location.href = 'https://www.google.com';
+                        }, 1000);
+                        clearInterval(countdownInterval);
+                    }
+                }, 1000);
+            }, 2000);
+        }
+
+        heart.addEventListener('click', function() {
+            tapCount++;
+            
+            // Calculate color progression (0 to 1 over maxTaps)
+            const colorFactor = Math.min(tapCount / maxTaps, 1);
+            const currentColor = interpolateColor(greyColor, coralColor, colorFactor);
+            
+            // Update heart color
+            this.style.setProperty('--heart-color', currentColor);
+            
+            // Add animation class
+            this.classList.add('revived');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                this.classList.remove('revived');
+            }, 600);
+
+            // After 5 taps, start continuous beating
+            if (tapCount >= maxTaps) {
+                setTimeout(() => {
+                    this.classList.add('continuous-beat');
+                    startCountdown();
+                }, 600);
+            }
+            
+            // Optional: Add haptic feedback on mobile
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        });
+
+        // Prevent context menu on long press
+        heart.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
