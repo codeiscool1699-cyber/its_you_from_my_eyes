@@ -123,6 +123,7 @@
             background-image: url('./assets/photos/1.jpg');
             background-size: cover;
             background-repeat: no-repeat;
+            box-shadow: 0px 0px 10px 0px;
         }
 
         .image-text {
@@ -286,6 +287,11 @@
         .feature-card-art{
             background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
                         url('./assets/card-bg/art-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-card-movie{
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/movie-bg.jpg') center/cover no-repeat;
         }
 
         .feature-card-content {
@@ -600,7 +606,7 @@
                     <div class="feature-card-title-2">Art and Craft</div>
                 </div>
             </div>
-            <div class="feature-card-2 feature-card-art">
+            <div class="feature-card-2 feature-card-movie">
                 <div class="feature-card-content-2">
                     <div class="feature-card-title-2">Movies and Web Series</div>
                 </div>
@@ -611,9 +617,18 @@
     <script>
         const heartsBg = document.querySelector('.hearts-bg');
         const textSection = document.querySelector('.text-section');
+        const imagePlaceholder = document.querySelector('.image-placeholder');
+        const images = [
+            './assets/photos/1.jpg',
+            './assets/photos/2.jpg',
+            './assets/photos/3.jpg',
+            './assets/photos/4.jpg',
+            './assets/photos/5.jpg'
+        ];
 
         let heartsEnabled = false;
         let heartsInterval = null;
+        let currentImageIndex = 0;
 
         // Function to animate number from 0 to target
         function animateNumber(element, target, duration) {
@@ -700,6 +715,19 @@
                 clearInterval(heartsInterval);
                 heartsBg.innerHTML = '';
             }
+        });
+
+        imagePlaceholder.addEventListener('click', () => {
+            let randomIndex;
+
+            // Ensure new image is different from current
+            do {
+                randomIndex = Math.floor(Math.random() * images.length);
+            } while (randomIndex === currentImageIndex);
+
+            currentImageIndex = randomIndex;
+
+            imagePlaceholder.style.backgroundImage = `url('${images[randomIndex]}')`;
         });
     </script>
 </body>
