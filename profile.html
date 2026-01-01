@@ -267,6 +267,23 @@
             justify-content: center;
             max-height: 200px;
             min-height: 200px;
+            background-color: darkgray;
+        }
+
+        .feature-card-3 {
+            /* background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80') center/cover no-repeat; */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-height: 200px;
+            min-height: 200px;
+            background-color: darkgray;
         }
 
         .feature-card-travel{
@@ -289,9 +306,39 @@
                         url('./assets/card-bg/art-bg.jpg') center/cover no-repeat;
         }
 
-        .feature-card-movie{
+        .feature-card-movie {
             background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
                         url('./assets/card-bg/movie-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-milk-cake {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/milkcake-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-kaju-katli {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/kajikatli-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-choco-pie {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/lottechocopie-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-five-star {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/fivestart-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-gems {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/gems-bg.jpg') center/cover no-repeat;
+        }
+
+        .feature-kitkat{
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('./assets/card-bg/kitkat-bg.jpg') center/cover no-repeat;
         }
 
         .feature-card-content {
@@ -308,6 +355,13 @@
             z-index: 1;
         }
 
+        .feature-card-content-3 {
+            padding: 20px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
         .feature-card-title {
             font-size: 22px;
             font-weight: 600;
@@ -318,6 +372,16 @@
             font-size: 22px;
             font-weight: 600;
             text-align: center;
+        }
+
+        .feature-card-title-3 {
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .feature-card-back-3 {
+            display: none;
         }
 
         .feature-card-description {
@@ -406,6 +470,35 @@
             line-height: 1.4;
         }
 
+        .feature-card-content-3 {
+            position: relative;
+            width: 100%;
+            height: 160px;
+        }
+
+        /* front & back */
+        .feature-card-title-3,
+        .feature-card-back-3 {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* FRONT visible */
+        .feature-card-3[data-side="front"] .feature-card-title-3 {
+            opacity: 1;
+        }
+
+        /* BACK visible */
+        .feature-card-3[data-side="back"] .feature-card-back-3 {
+            opacity: 1;
+        }
+
         /* Mobile only - hide on desktop */
         @media (min-width: 768px) {
             .container {
@@ -469,6 +562,143 @@
 
         .text-section {
             cursor: pointer;
+        }
+
+        .travelline {
+            position: relative;
+            max-width: 100%;
+            width: 100%;
+            margin: auto;
+            padding: 40px 8px 60px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        /* ROAD */
+        .road {
+            position: absolute;
+            left: 38px;
+            top: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .road svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .road-bg {
+            fill: none;
+            stroke: #7d86c9;
+            stroke-width: 20;
+            stroke-linecap: round;
+        }
+
+        .road-dash {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-dasharray: 6 10;
+        }
+
+        /* ITEMS */
+        .item {
+            position: relative;
+            display: flex;
+            justify-content: flex-start;
+            margin: 60px 0;
+            padding-left: calc(50% + 35px);
+            padding-right: 8px;
+            z-index: 2;
+        }
+
+
+        /* CARD */
+        .travel-card {
+            position: relative;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 14px 16px 14px 44px;
+            width: 200px;
+            max-width: 200px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .travel-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* CAR */
+        .car {
+            position: absolute;
+            left: 48px;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            z-index: 3;
+            transition: top 0.3s ease-out;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3));
+        }
+
+        /* STEP */
+        .step {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: #eef1ff;
+            color: #5b63c7;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* TITLE */
+        .travel-card strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+
+
+        /* DESKTOP ENHANCEMENT */
+        @media (min-width: 768px) {
+            .travelline {
+                max-width: 480px;
+                padding: 40px 0 60px;
+            }
+
+            .travel-card {
+                max-width: 210px;
+            }
+        }
+
+        @media (max-width: 375px) {            
+            .item {
+                padding-left: 60px;
+                padding-right: 6px;
+            }
+            
+            .travel-card {
+                font-size: 12px;
+                padding: 12px 14px 12px 40px;
+            }
         }
     </style>
 </head>
@@ -612,6 +842,128 @@
                 </div>
             </div>
         </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <div class="cards-section">
+            <h2 class="section-headline">5 Most Memorable Trips</h2>
+            <div class="travelline">
+                <!-- ROAD -->
+                <div class="road">
+                    <svg viewBox="0 0 60 1200" preserveAspectRatio="none">
+                        <path class="road-bg"
+                              d="M30 20
+                                 C10 180, 50 360, 30 540
+                                 S10 900, 30 1180" />
+                        <path class="road-dash"
+                              d="M30 20
+                                 C10 180, 50 360, 30 540
+                                 S10 900, 30 1180" />
+                    </svg>
+                </div>
+            
+                <!-- CAR -->
+                <div class="car">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <rect x="71.111" y="231.111" style="fill:#F2F2F4;" width="85.333" height="71.111"/>
+                        <rect x="355.556" y="231.111" style="fill:#DFDFE1;" width="85.333" height="71.111"/>
+                        <polygon style="fill:#B4D8F1;" points="85.333,216.889 85.333,188.444 170.667,103.111 341.333,103.111 433.778,195.556 433.778,216.889"/>
+                        <polygon style="fill:#98C8ED;" points="433.778,195.556 341.333,103.111 327.111,103.111 213.333,216.889 433.778,216.889"/>
+                        <rect x="35.556" y="344.889" style="fill:#88888F;" width="85.333" height="85.333"/>
+                        <rect x="391.111" y="344.889" style="fill:#56545A;" width="85.333" height="85.333"/>
+                        <path style="fill:#FF6643;" d="M471.059,202.667L350.17,81.778H161.83L40.942,202.667H0v42.667h35.556v113.778h440.889V245.333H512v-42.667H471.059z M179.503,124.444h152.993l78.222,78.222H101.281L179.503,124.444z M142.222,288H85.333v-42.667h56.889V288z M426.667,288h-56.889v-42.667h56.889V288z"/>
+                        <path style="fill:#FF4F19;" d="M471.059,202.667L350.17,81.778H256v42.667h76.497l78.222,78.222H256v156.444h220.444V245.333H512v-42.667H471.059z M426.667,288h-56.889v-42.667h56.889V288z"/>
+                    </svg>
+                </div>
+            
+                <!-- ITEMS -->
+                <div class="item">
+                    <div class="travel-card">
+                        <div class="step">01</div>
+                        <strong>Delhi</strong>
+                        The train adventure
+                    </div>
+                </div>
+            
+                <div class="item">
+                    <div class="travel-card">
+                        <div class="step">02</div>
+                        <strong>Rajasthan</strong>
+                        The culture exploration  
+                    </div>
+                </div>
+            
+                <div class="item">
+                    <div class="travel-card">
+                        <div class="step">03</div>
+                        <strong>Gujrat</strong>
+                        The land of business minds
+                    </div>
+                </div>
+            
+                <div class="item">
+                    <div class="travel-card">
+                        <div class="step">04</div>
+                        <strong>Uttar Pradesh</strong>
+                        The raw and real peoples home
+                    </div>
+                </div>
+            
+                <div class="item">
+                    <div class="travel-card">
+                        <div class="step">05</div>
+                        <strong>Maheshwar</strong>
+                        The history of homeland
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Favourites Cards Section -->
+        <div class="cards-section">
+            <h2 class="section-headline">Favourite</h2>
+            <h3 class="section-headline">Traditional Sweets</h3>
+            <div class="feature-card-2 feature-milk-cake">
+                <div class="feature-card-content-2">
+                    <div class="feature-card-title-2">Milk Cake</div>
+                </div>
+            </div>
+            <div class="feature-card-2 feature-kaju-katli">
+                <div class="feature-card-content-2">
+                    <div class="feature-card-title-2">Kaji Katli</div>
+                </div>
+            </div>
+            
+            <h3 class="section-headline">Chocolates</h3>
+            <div class="feature-card-3 feature-choco-pie" data-name="card-choco-pie" data-side="front">
+                <div class="feature-card-content-3">
+                    <div class="feature-card-title-3" id="card-choco-pie-front">Lotti-Choco Pie</div>
+                    <div class="feature-card-back-3" id="card-choco-pie-back">hey my _____</div>
+                </div>
+            </div>
+            <div class="feature-card-3 feature-five-star" data-name="card-five-star" data-side="front">
+                <div class="feature-card-content-3">
+                    <div class="feature-card-title-3" id="card-five-star-front">Five Star</div>
+                    <div class="feature-card-back-3" id="card-five-star-back">you are the _____ for me</div>
+                </div>
+            </div>
+            <div class="feature-card-3 feature-gems" data-name="card-gems" data-side="front">
+                <div class="feature-card-content-3">
+                    <div class="feature-card-title-3" id="card-gems-front">Gems</div>
+                    <div class="feature-card-back-3" id="card-gems-back">but you are _____ in my life</div>
+                </div>
+            </div>
+            <div class="feature-card-3 feature-kitkat" data-name="card-kitkat" data-side="front">
+                <div class="feature-card-content-3">
+                    <div class="feature-card-title-3" id="card-kitkat-front">Kitkat</div>
+                    <div class="feature-card-back-3" id="card-kitkat-back">our relation is like _____ with no breaks</div>
+                </div>
+            </div> 
+        </div>
     </div>
 
     <script>
@@ -728,6 +1080,102 @@
             currentImageIndex = randomIndex;
 
             imagePlaceholder.style.backgroundImage = `url('${images[randomIndex]}')`;
+        });
+
+        // Intersection Observer for fade-in/out animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        });
+
+        // Observe all cards
+        const cards = document.querySelectorAll('.travel-card');
+        cards.forEach(travelCard => {
+            observer.observe(travelCard);
+        });
+
+        // Car animation based on scroll
+        const car = document.querySelector('.car');
+        const travelline = document.querySelector('.travelline');
+        const items = document.querySelectorAll('.item');
+        const road = document.querySelector('.road');
+
+        function updateCarPosition() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const timelineRect = travelline.getBoundingClientRect();
+            const roadRect = road.getBoundingClientRect();
+            const timelineTop = scrollTop + timelineRect.top;
+            const roadHeight = roadRect.height;
+            const windowHeight = window.innerHeight;
+            
+            // Get the last item position
+            const lastItem = items[items.length - 1];
+            const lastItemRect = lastItem.getBoundingClientRect();
+            const lastItemTop = scrollTop + lastItemRect.top;
+            const lastItemMiddle = lastItemTop + lastItemRect.height / 2;
+            
+            // Calculate scroll range - car should reach the last item
+            const scrollStart = timelineTop - windowHeight / 2;
+            const scrollEnd = lastItemMiddle;
+            const scrollRange = scrollEnd - scrollStart;
+            
+            // Calculate progress (0 to 1)
+            const scrollProgress = Math.max(0, Math.min(1, (scrollTop - scrollStart) / scrollRange));
+            
+            // Position car from start to the last item position
+            const startPos = 150;
+            const endPos = lastItemMiddle - timelineTop;
+            const carTop = startPos + (endPos - startPos) * scrollProgress;
+            
+            car.style.top = carTop + 'px';
+            
+            // Check which items the car has reached and make them visible
+            items.forEach((item, index) => {
+                const itemRect = item.getBoundingClientRect();
+                const itemTop = scrollTop + itemRect.top;
+                const itemMiddle = itemTop + itemRect.height / 2;
+                const carPosition = timelineTop + carTop;
+                
+                const travelCard = item.querySelector('.travel-card');
+                
+                // If car has reached this item, make it visible
+                if (carPosition >= itemMiddle - 50) {
+                    travelCard.classList.add('visible');
+                }
+            });
+        }
+
+        // Update car position on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateCarPosition();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Initial position and update on load
+        window.addEventListener('load', updateCarPosition);
+        updateCarPosition();
+
+
+        document.addEventListener('click', function (e) {
+            const card = e.target.closest('.feature-card-3');
+            if (!card) return;
+
+            const currentSide = card.getAttribute('data-side');
+            card.setAttribute('data-side', currentSide === 'front' ? 'back' : 'front');
         });
     </script>
 </body>
