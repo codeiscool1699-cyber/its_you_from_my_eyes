@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .mobile-only {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .desktop-message {
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            .mobile-only {
+                display: none;
+            }
+
+            .desktop-message {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .desktop-message h1 {
+                font-size: 32px;
+                color: #333;
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+
+            .desktop-message p {
+                font-size: 18px;
+                color: #666;
+                margin: 0;
+            }
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 20px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom,  rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.75));
+            z-index: 1;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .date-info {
+            flex: 1;
+        }
+
+        .date-number {
+            font-size: 48px;
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .date-day {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+
+        .date-full {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .description {
+            font-size: 14px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .go-button {
+            background: #ff4081;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 64, 129, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .go-button:hover {
+            background: #f50057;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 64, 129, 0.5);
+        }
+
+        .timeline-container {
+            padding: 30px 20px;
+            background: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(5px);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -38px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 64, 129, 0.2);
+        }
+
+        .timeline-fulldate {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .timeline-description {
+            font-size: 13px;
+            color: #999;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="desktop-message">
+        <h1>Please open in mobile to view this page</h1>
+        <p>This page is optimized for mobile devices only.</p>
+    </div>
+
+    <div class="mobile-only">
+    <div class="header" id="headerBg">
+        <div class="header-content">
+            <div class="date-info">
+                <div class="date-number" id="headerDate">4</div>
+                <div class="date-day" id="headerDay">Thursday</div>
+                <div class="date-full" id="headerMonthAndYearDate">September 2025</div>
+                <div class="description" id="headerDescription">The Engagement</div>
+            </div>
+            <a href="#" class="go-button" id="goLink" style="display: none;">GO</a>
+        </div>
+    </div>
+
+    <div class="timeline-container">
+        <div class="timeline" id="timeline">
+            <!-- Timeline items will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const timelineData = [
+            {
+                title: "The Engagement",
+                description: "",
+                time: "",
+                date: "4",
+                day: "Thursday",
+                monthAndYearDate: "September 2025",
+                image: "./assets/timeline-images/engagement.jpg",
+                link: ""
+            },
+            {
+                title: "First Call",
+                description: "",
+                time: "",
+                date: "16",
+                day: "Tuesday",
+                monthAndYearDate: "September 2025",
+                image: "./assets/timeline-images/call.jpg",
+                link: ""
+            },
+            {
+                title: "First Gift (from AngryBird to CuttiePie)",
+                description: "",
+                time: "",
+                date: "27",
+                day: "Saturday",
+                monthAndYearDate: "September 2025",
+                image: "./assets/timeline-images/gift.jpg",
+                link: ""
+            },
+            {
+                title: "First Gift/Goodie Bag (from CuttiePie to AngryBird)",
+                description: "",
+                time: "",
+                date: "21",
+                day: "Tuesday",
+                monthAndYearDate: "October 2025",
+                image: "./assets/timeline-images/goodies.jpg",
+                link: ""
+            },
+            {
+                title: "First WhatsApp Text",
+                description: "",
+                time: "",
+                date: "29",
+                day: "Tuesday",
+                monthAndYearDate: "November 2025",
+                image: "./assets/timeline-images/whatsapp-test.jpg",
+                link: ""
+            },
+            {
+                title: "First Food Date",
+                description: "",
+                time: "1pm - 3pm",
+                date: "10",
+                day: "Saturday",
+                monthAndYearDate: "January 2026",
+                image: "./assets/timeline-images/food-date.jpg",
+                link: ""
+            }
+        ];
+
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            timelineData.forEach((item, index) => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item' + (index === 0 ? ' active' : '');
+                timelineItem.onclick = () => updateHeader(index);
+
+                timelineItem.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-fulldate">${item.date} ${item.monthAndYearDate}</div>
+                    <div class="timeline-title">${item.title}</div>
+                `;
+
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        function updateHeader(index) {
+            const item = timelineData[index];
+            
+            document.getElementById('headerDate').textContent = item.date;
+            document.getElementById('headerDay').textContent = item.day;
+            document.getElementById('headerMonthAndYearDate').textContent = item.monthAndYearDate;
+            document.getElementById('headerDescription').textContent = item.title + (item.description ? ' - ' + item.description : '');
+            document.getElementById('headerBg').style.backgroundImage = `url(${item.image})`;
+            document.getElementById('goLink').style.display = "none";
+
+            if(item.link !== ""){
+                document.getElementById('goLink').style.display = "inline-block";
+                document.getElementById('goLink').href = item.link;
+            }
+
+            // Update active state
+            document.querySelectorAll('.timeline-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        }
+
+        // Initialize timeline
+        renderTimeline();
+        // Set initial background image
+        document.getElementById('headerBg').style.backgroundImage = `url(${timelineData[0].image})`;
+    </script>
+</body>
+</html>
