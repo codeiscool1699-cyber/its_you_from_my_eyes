@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Activity Picker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: white;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    transition: background 1s ease;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+
+  body.romantic-mode {
+    background: #fae7f1;
+  }
+
+  body.romantic-mode .hearts-bg {
+    opacity: 1;
+  }
+
+  .hearts-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .hearts-bg.active { opacity: 1; }
+
+  .heart {
+    position: absolute;
+    bottom: -40px;
+    color: rgba(255, 105, 180, 0.75);
+    font-size: 20px;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-120vh) scale(1.6); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px 60px;
+  }
+
+  /* Desktop Warning */
+  .desktop-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .desktop-warning h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .desktop-warning p {
+    font-size: 18px;
+    color: #666;
+  }
+
+  @media (min-width: 769px) {
+    .desktop-warning {
+      display: flex;
+    }
+    .container,
+    .hearts-bg {
+      display: none;
+    }
+  }
+
+  .text-line2 {
+    font-size: 14px;
+    color: #b0b0b0;
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .text-line3 {
+    font-size: 30px;
+    color: #ff6b6b;
+    font-style: italic;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .section-headline {
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  /* Add option row */
+  .add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .add-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .add-input:focus {
+    border-color: #ff6b6b;
+  }
+
+  .add-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 48px;
+    font-size: 22px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+
+  .add-btn:hover { background: #ff5252; }
+  .add-btn:active { transform: scale(0.94); }
+
+  /* Options list */
+  .options-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .option-pill {
+    position: relative;
+    padding: 10px 16px;
+    padding-right: 32px;
+    border-radius: 20px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .option-pill.selected {
+    background: #ff6b6b;
+    border-color: #ff6b6b;
+    color: white;
+  }
+
+  .option-pill .remove-x {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    opacity: 0.55;
+    line-height: 1;
+  }
+
+  .option-pill.selected .remove-x { opacity: 0.85; }
+
+  .hint-text {
+    font-size: 12px;
+    color: #b0b0b0;
+    margin-bottom: 28px;
+    min-height: 16px;
+  }
+
+  .hint-text.warn { color: #ff6b6b; }
+
+  /* Random button */
+  .random-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.35);
+    margin-bottom: 28px;
+  }
+
+  .random-btn:hover { background: #ff5252; }
+  .random-btn:active { transform: scale(0.98); }
+
+  .random-btn:disabled {
+    background: #d0d0d0;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .random-btn.spinning {
+    background: #ff5252;
+  }
+
+  /* Result box */
+  .result-box {
+    background: #fff;
+    border: 1.5px solid #f0d9e5;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .result-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .result-headline {
+    font-size: 14px;
+    color: #b0b0b0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .result-value {
+    font-size: 26px;
+    color: #ff6b6b;
+    font-style: italic;
+    font-weight: 700;
+    min-height: 34px;
+    transition: transform 0.15s ease;
+  }
+
+  .result-value.spin {
+    animation: spinFlash 0.12s ease infinite;
+  }
+
+  @keyframes spinFlash {
+    0% { opacity: 0.4; transform: scale(0.96); }
+    50% { opacity: 1; transform: scale(1.03); }
+    100% { opacity: 0.4; transform: scale(0.96); }
+  }
+
+  .result-sub {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #b0b0b0;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: #b0b0b0;
+    font-size: 13px;
+    padding: 10px 0 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts-bg"></div>
+
+<!-- Desktop Warning -->
+<div class="desktop-warning">
+  <div>
+    <h1>Please open in mobile to view this page</h1>
+    <p>This page is optimized for mobile devices only.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="text-line2">Let fate decide the activit of <b style="color: #ff6b6b;">love</b></div>
+  <div class="text-line3">What Should We Do?</div>
+
+  <div class="section-headline">Add an activity</div>
+  <div class="add-row">
+    <input type="text" class="add-input" id="newOptionInput" placeholder="e.g. Watch a movie" maxlength="40">
+    <button class="add-btn" id="addOptionBtn">+</button>
+  </div>
+
+  <div class="section-headline">Pick 2 or more</div>
+  <div class="options-list" id="optionsList"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">No activities yet — add a few above!</div>
+  <div class="hint-text" id="hintText">Select at least 2 activities to continue</div>
+
+  <button class="random-btn" id="randomBtn" disabled>Select Random Activity</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-headline">Activity to do is</div>
+    <div class="result-value" id="resultValue">—</div>
+    <div class="result-sub" id="resultSub"></div>
+  </div>
+</div>
+
+<script>
+  const defaultOptions = [
+    'Simple Steps',
+    'Cute Coco',
+    'Penguin Together',
+    'Chemical Bond',
+    'Beautiful View',
+    'The Master Activity'
+  ];
+
+  let options = defaultOptions.map((name, i) => ({
+    id: 'opt-' + i + '-' + Date.now(),
+    name,
+    selected: false
+  }));
+
+  const optionsList = document.getElementById('optionsList');
+  const emptyState = document.getElementById('emptyState');
+  const hintText = document.getElementById('hintText');
+  const randomBtn = document.getElementById('randomBtn');
+  const resultBox = document.getElementById('resultBox');
+  const resultValue = document.getElementById('resultValue');
+  const resultSub = document.getElementById('resultSub');
+  const newOptionInput = document.getElementById('newOptionInput');
+  const addOptionBtn = document.getElementById('addOptionBtn');
+  const heartsBg = document.querySelector('.hearts-bg');
+
+  let heartsInterval = null;
+  let spinTimer = null;
+
+  const SPIN_DURATION_MS = 2000; // x = 2 seconds
+  const SPIN_TICK_MS = 90;
+
+  function renderOptions() {
+    optionsList.innerHTML = '';
+
+    if (options.length === 0) {
+      emptyState.style.display = 'block';
+    } else {
+      emptyState.style.display = 'none';
+    }
+
+    options.forEach(opt => {
+      const pill = document.createElement('div');
+      pill.className = 'option-pill' + (opt.selected ? ' selected' : '');
+      pill.dataset.id = opt.id;
+
+      const label = document.createElement('span');
+      label.textContent = opt.name;
+      pill.appendChild(label);
+
+      const removeX = document.createElement('span');
+      removeX.className = 'remove-x';
+      removeX.textContent = '✕';
+      removeX.title = 'Remove';
+      pill.appendChild(removeX);
+
+      pill.addEventListener('click', (e) => {
+        if (e.target === removeX) {
+          options = options.filter(o => o.id !== opt.id);
+          renderOptions();
+          updateRandomBtnState();
+          return;
+        }
+        opt.selected = !opt.selected;
+        renderOptions();
+        updateRandomBtnState();
+      });
+
+      optionsList.appendChild(pill);
+    });
+  }
+
+  function selectedOptions() {
+    return options.filter(o => o.selected);
+  }
+
+  function updateRandomBtnState() {
+    const count = selectedOptions().length;
+    if (count >= 2) {
+      randomBtn.disabled = false;
+      hintText.textContent = count + ' activities selected';
+      hintText.classList.remove('warn');
+    } else {
+      randomBtn.disabled = true;
+      hintText.textContent = 'Select at least 2 activities to continue';
+      hintText.classList.add('warn');
+    }
+  }
+
+  function addOption() {
+    const value = newOptionInput.value.trim();
+    if (!value) return;
+    options.push({ id: 'opt-' + Date.now() + '-' + Math.random(), name: value, selected: false });
+    newOptionInput.value = '';
+    renderOptions();
+    updateRandomBtnState();
+    newOptionInput.focus();
+  }
+
+  addOptionBtn.addEventListener('click', addOption);
+  newOptionInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addOption();
+  });
+
+  function stopHearts() {
+    heartsBg.classList.remove('active');
+    document.body.classList.remove('romantic-mode');
+    clearInterval(heartsInterval);
+    heartsInterval = null;
+    heartsBg.innerHTML = '';
+  }
+
+  function startHearts() {
+    heartsBg.classList.add('active');
+    document.body.classList.add('romantic-mode');
+    heartsInterval = setInterval(createHeart, 350);
+  }
+
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = Math.random() * 18 + 14 + 'px';
+    heart.style.animationDuration = Math.random() * 5 + 6 + 's';
+    heartsBg.appendChild(heart);
+    setTimeout(() => heart.remove(), 12000);
+  }
+
+  function runRandomSelection() {
+    // If hearts are currently bubbling, stop them and roll again right away.
+    if (heartsInterval) {
+      stopHearts();
+    }
+
+    const pool = selectedOptions();
+    if (pool.length < 2) return;
+
+    clearInterval(spinTimer);
+    resultBox.classList.add('visible');
+    resultValue.classList.add('spin');
+    resultSub.textContent = '';
+    randomBtn.classList.add('spinning');
+    randomBtn.disabled = true;
+
+    spinTimer = setInterval(() => {
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      resultValue.textContent = pick.name;
+    }, SPIN_TICK_MS);
+
+    setTimeout(() => {
+      clearInterval(spinTimer);
+      const finalPick = pool[Math.floor(Math.random() * pool.length)];
+      resultValue.textContent = finalPick.name;
+      resultValue.classList.remove('spin');
+      resultSub.textContent = 'Tap the button again to stop the celebration';
+      randomBtn.classList.remove('spinning');
+      randomBtn.disabled = false;
+      startHearts();
+    }, SPIN_DURATION_MS);
+  }
+
+  randomBtn.addEventListener('click', runRandomSelection);
+
+  renderOptions();
+  updateRandomBtnState();
+</script>
+</body>
+</html>
